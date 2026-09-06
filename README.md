@@ -1,95 +1,189 @@
-::: {align="center"}
-
-REVERA
-
-Intelligent Revenue Recovery System
+REVERA --- Intelligent Revenue Recovery System
 
 Detect. Decide. Act. Prove.
 
-AI-powered revenue recovery that doesn't stop at prediction --- it
-chooses an action, enforces policy, executes through Razorpay, and
-counts money only after it is verified.
+REVERA is an AI-powered revenue recovery control plane built for the
+Razorpay AI Buildathon 2026 --- Track 03: AI Revenue Recovery.
 
-<br>{=html}
+It detects revenue leakage, diagnoses why a payment is at risk, selects
+the recovery action with the strongest expected economic outcome,
+enforces deterministic safety policies, executes recovery through
+Razorpay Test Mode, and verifies actual money recovered through webhook
+events.
 
+Why REVERA?
 
+Payment failures are not all the same.
 
+A failed UPI payment, an abandoned checkout, an insufficient-funds
+failure, and a repeatedly failing customer may require completely
+different recovery strategies.
 
+REVERA combines:
 
+Customer and payment context
 
-:::
+A machine-learning recovery risk model
 
-The Problem
+Gemini-powered diagnosis and strategy reasoning
 
-A failed payment is not necessarily lost revenue.
+Deterministic recovery economics
 
-But most recovery systems stop at:
+Deterministic policy enforcement
 
-"This payment is likely to fail."
+Razorpay payment execution
 
-REVERA asks the harder questions:
+Webhook-based recovery verification
 
-Why did it fail?
-What should we do next?
-Is that action economically worth taking?
-Are we allowed to take it?
-Did it actually recover money?
+A complete audit trail
 
-That turns revenue recovery from a notification problem into a
-closed-loop decision system.
-
-The REVERA Idea
-
-        Revenue at Risk
-              │
-              ▼
-          ┌────────┐
-          │ DETECT │  ML risk scoring
-          └───┬────┘
-              ▼
-        ┌───────────┐
-        │ DIAGNOSE  │  AI investigates context
-        └─────┬─────┘
-              ▼
-         ┌────────┐
-         │ DECIDE │  AI proposes strategy
-         └───┬────┘
-             ▼
-       ┌────────────┐
-       │  OPTIMIZE  │  Economics ranks actions
-       └─────┬──────┘
-             ▼
-        ┌────────┐
-        │   ACT  │  Policy → Razorpay
-        └───┬────┘
-            ▼
-       ┌──────────┐
-       │  PROVE   │  Webhook verifies payment
-       └────┬─────┘
-            ▼
-       Verified ₹ Recovered
-            │
-            └──────────────► Learn
-
-The core principle
+The key principle is:
 
 AI proposes. Policy authorizes. Razorpay executes. Webhooks prove.
 
-The LLM is never the financial authority.
+Core Flow
 
-Why REVERA Is Different
+Razorpay Event
+      ↓
+Event Gateway
+      ↓
+Revenue / Customer Context
+      ↓
+Risk Engine
+      ↓
+Gemini Investigator
+      ↓
+Gemini Strategy
+      ↓
+Recovery Economics Optimizer
+      ↓
+Evidence / Schema Validation
+      ↓
+Deterministic Policy Guard
+      ↓
+Razorpay Action Executor
+      ↓
+Razorpay Webhook
+      ↓
+Verified ₹ Recovered
+      ↓
+Audit + Learning Loop
 
-01 --- From prediction to action
+REVERA Recovery Loop
 
-A risk model only tells us what might happen.
+DETECT
+   ↓
+DIAGNOSE
+   ↓
+DECIDE
+   ↓
+OPTIMIZE
+   ↓
+EXECUTE
+   ↓
+VERIFY
+   ↓
+LEARN
 
-REVERA turns that prediction into an action plan:
+What Makes REVERA Different?
+
+1. It does not stop at risk detection
+
+A risk score alone does not recover money.
+
+REVERA turns the risk assessment into an executable recovery decision.
+
+2. AI does not control money movement
+
+Gemini is used for reasoning, diagnosis, and strategy generation.
+
+It does not directly execute or authorize financial actions.
+
+Gemini
+  → Diagnosis
+  → Strategy proposal
+
+Deterministic Economics
+  → Expected recovery calculation
+
+Deterministic Policy
+  → Authorization
+
+Razorpay
+  → Execution
+
+Webhook
+  → Verification
+
+3. Recovery is based on economics
+
+REVERA evaluates expected recovery value rather than blindly sending
+reminders or retries.
+
+It considers:
+
+Probability of recovery
+
+Expected recovery amount
+
+Action-specific probability uplift
+
+Intervention cost
+
+Friction
+
+Customer contact limits
+
+Attempt limits
+
+Discount limits
+
+Transaction amount
+
+4. Money is counted only after verification
+
+Creating a payment link does not mean revenue has been recovered.
+
+REVERA marks revenue as recovered only after the Razorpay webhook
+confirms the payment.
+
+Features
+
+AI-Powered Diagnosis
+
+Understands the payment situation using event and customer context.
+
+Example context:
+
+Payment method
+
+Failure reason
+
+Number of attempts
+
+Previous successes/failures
+
+Customer age
+
+Customer lifetime value
+
+Days since last payment
+
+Checkout duration
+
+Previous recovery rate
+
+Recent customer contacts
+
+Smart Recovery Decisions
+
+REVERA can evaluate recovery actions including:
 
 PAYMENT_LINK
 
-ALTERNATIVE_METHOD
-
 RETRY
+
+ALTERNATIVE_METHOD
 
 REMINDER
 
@@ -99,241 +193,14 @@ INCENTIVE
 
 STOP
 
-02 --- From probability to economics
+The selected action is based on expected economic outcome and policy
+constraints.
 
-The highest-probability action is not always the best action.
+Policy-Aware Automation
 
-REVERA compares expected recovery against intervention cost and
-friction.
+Current benchmark policy:
 
-Expected Net Recovery
-        =
-Expected Recovery Value
-        -
-Intervention Cost
-
-03 --- From AI autonomy to controlled autonomy
-
-Gemini can reason about a case, but it cannot bypass policy.
-
-Gemini
-  ↓
-Diagnosis + Strategy
-
-Economics Engine
-  ↓
-Expected Outcome
-
-Policy Guard
-  ↓
-Approve / Block / Stop / Human Review
-
-Razorpay
-  ↓
-Execute
-
-Webhook
-  ↓
-Verify
-
-04 --- From "action taken" to "money recovered"
-
-This is the most important distinction.
-
-Payment Link Created
-        ≠
-Revenue Recovered
-
-Payment Successful
-        ↓
-Razorpay Webhook
-        ↓
-Verified Revenue
-
-REVERA only counts recovered revenue after external confirmation.
-
-Architecture
-
-┌─────────────────────────────────────────────────────────────┐
-│                     REVERA CONTROL PLANE                    │
-│                                                             │
-│  Razorpay Event                                             │
-│       │                                                     │
-│       ▼                                                     │
-│  Event Gateway                                              │
-│       │                                                     │
-│       ▼                                                     │
-│  Customer + Payment Context                                 │
-│       │                                                     │
-│       ▼                                                     │
-│  ┌─────────────────────┐                                    │
-│  │ ML Risk Engine      │                                    │
-│  │ recovery probability│                                    │
-│  └──────────┬──────────┘                                    │
-│             ▼                                               │
-│  ┌─────────────────────┐                                    │
-│  │ Gemini Investigator │                                    │
-│  │ diagnose the case   │                                    │
-│  └──────────┬──────────┘                                    │
-│             ▼                                               │
-│  ┌─────────────────────┐                                    │
-│  │ Gemini Strategy     │                                    │
-│  │ propose action      │                                    │
-│  └──────────┬──────────┘                                    │
-│             ▼                                               │
-│  ┌─────────────────────┐                                    │
-│  │ Economics Optimizer │                                    │
-│  │ rank expected value │                                    │
-│  └──────────┬──────────┘                                    │
-│             ▼                                               │
-│  ┌─────────────────────┐                                    │
-│  │ Policy Guard        │                                    │
-│  │ deterministic auth  │                                    │
-│  └──────────┬──────────┘                                    │
-│             ▼                                               │
-│  ┌─────────────────────┐                                    │
-│  │ Razorpay Executor   │                                    │
-│  │ Test Mode actions   │                                    │
-│  └──────────┬──────────┘                                    │
-│             │                                               │
-└─────────────┼───────────────────────────────────────────────┘
-              ▼
-       Razorpay Webhook
-              │
-              ▼
-       HMAC Verification
-              │
-              ▼
-       Idempotency Check
-              │
-              ▼
-       Verified ₹ Recovery
-              │
-              ▼
-         Audit Trail
-
-A Recovery Decision, End to End
-
-Consider a case like:
-
-Case                RCP-1042
-Amount              ₹8,499
-Event               payment.failed
-Payment method      UPI
-Failure reason      transient_failure
-Attempts            0
-Customer age        180 days
-
-REVERA evaluates the case through multiple layers.
-
-Risk Engine
-
-Predicts the likelihood that the revenue can still be recovered.
-
-AI Investigator
-
-Uses payment + customer context to explain the likely reason and
-recovery opportunity.
-
-AI Strategy
-
-Proposes the most suitable recovery action.
-
-Economics Engine
-
-Compares actions using expected recovery value, uplift, friction and
-intervention cost.
-
-Policy Guard
-
-Checks whether the proposed action is permitted.
-
-Executor
-
-If authorized, creates the Razorpay Test Mode recovery action.
-
-Webhook
-
-When the customer actually pays, Razorpay confirms the outcome.
-
-Result
-
-The case moves from:
-
-AT RISK
-   ↓
-RECOVERY ACTION
-   ↓
-PAYMENT CONFIRMED
-   ↓
-RECOVERED
-
-The Intelligence Stack
-
-REVERA deliberately separates different kinds of intelligence.
-
-Layer                 Responsibility                Authority
-
-ML Risk Engine        Predict recovery likelihood   No
-Gemini Investigator   Understand the situation      No
-Gemini Strategy       Propose an action             No
-Economics Engine      Calculate expected value      No
-Policy Guard          Authorize or stop action      Yes
-Razorpay              Execute payment action        Yes
-Webhook               Verify outcome                Yes
-
-This separation is intentional.
-
-The model can recommend. The system decides.
-
-Recovery Economics
-
-REVERA evaluates actions using an expected-value framework.
-
-For an action a:
-
-Expected Recovery(a)
-    =
-Amount at Risk × P(recovery | action, context)
-
-Expected Net Recovery(a)
-    =
-Expected Recovery(a) − Intervention Cost(a)
-
-The engine also accounts for action-specific behavior such as:
-
-Recovery probability uplift
-
-Payment friction
-
-Attempt count
-
-Customer contact frequency
-
-Failure reason
-
-Time since failure
-
-Discount cost
-
-Operational cost
-
-The result is not:
-
-"Which action sounds best?"
-
-It is:
-
-"Which permitted action has the strongest expected economic
-outcome?"
-
-Policy & Safety
-
-Automation is useful only when it knows when to stop.
-
-Current policy
-
-Guardrail                       Limit
+Policy                          Limit
 
 Automated recovery limit      ₹50,000
 Human review limit            ₹75,000
@@ -341,222 +208,199 @@ Maximum recovery attempts           2
 Maximum contacts / 24h              2
 Maximum discount                   5%
 
-Possible policy outcomes:
+Actions can be:
 
 APPROVED
+
 BLOCK
+
 STOP
+
 HUMAN_REVIEW
 
-Stopping rules
+Verified Revenue
 
-REVERA stops intervention when:
+Recovery status is updated from Razorpay webhook events.
 
-Maximum attempts are reached
+The system supports webhook-driven reconciliation for payment-link
+events and prevents duplicate webhook processing.
 
-Customer contact limits are reached
+Complete Audit Trail
 
-A requested action violates merchant policy
+REVERA records:
 
-Transaction value requires human review
+Recovery cases
 
-Further intervention is not economically justified
+AI diagnosis
 
-The goal is not maximum automation.
+Strategy decisions
 
-The goal is maximum verified recovery within controlled risk.
+Economics calculations
 
-Benchmark: 1,000 Controlled Synthetic Cases
+Policy decisions
 
-REVERA was evaluated against two strategies:
+Recovery actions
 
-Baseline
+Razorpay execution
 
-Fixed Reminder
+Webhook events
 
-REVERA
+Verified recovery
+
+Machine Learning Risk Engine
+
+REVERA uses a customer-group holdout evaluation strategy to reduce
+customer-level leakage between training and testing data.
+
+Current evaluation results:
+
+Metric          Result
+
+ROC-AUC         0.7829
+Precision       0.5566
+Recall          0.7047
+F1              0.6220
+Accuracy        0.7129
+Brier Score     0.1901
+
+Evaluation split:
+
+Train events: 9,544
+Test events: 2,456
+Test customers: 586
+Split strategy: Customer-group holdout
+
+The dataset used for the benchmark is synthetic.
+
+Recovery Economics
+
+REVERA does not simply select the action with the highest raw recovery
+probability.
+
+It estimates the economic value of each action.
+
+Conceptually:
+
+Expected Recovery Value
+    =
+Expected Recovery Amount
+    -
+Intervention Cost
+
+The engine considers action-specific recovery probability changes and
+operational costs.
+
+This allows REVERA to answer:
+
+"Which action is most likely to recover money while creating the
+strongest net economic outcome?"
+
+Controlled Benchmark
+
+REVERA was evaluated on 1,000 controlled synthetic cases.
 
 Results
 
 Metric                        REVERA      Baseline   Fixed Reminder
 
-Gross recovered      ₹61.34 lakh   ₹56.43 lakh      ₹59.32 lakh
+Gross recovered          ₹61.34 lakh   ₹56.43 lakh      ₹59.32 lakh
 Net recovered        ₹60.43 lakh   ₹56.43 lakh      ₹59.08 lakh
 Recovery rate              55.8%         51.9%            53.9%
 Successful cases      558 / 1000    519 / 1000       539 / 1000
 
-REVERA outcome
+REVERA improvement
 
-Net recovered                 ₹60.43 lakh
-Baseline                      ₹56.43 lakh
-Incremental net recovery      ₹3.99 lakh
-Relative uplift               +7.09%
-Above fixed reminder          ₹1.35 lakh
+Net recovered:
+₹60.43 lakh
 
-Policy violations             0
-Stopping violations           0
+Baseline:
+₹56.43 lakh
 
-Action distribution
+Incremental net recovery:
+₹3.99 lakh
+
+Relative uplift:
++7.09%
+
+Above fixed reminder:
+₹1.35 lakh
+
+Policy violations:
+0
+Stopping violations:
+0
+
+REVERA action distribution
 
 PAYMENT_LINK        365
 ALTERNATIVE_METHOD  364
 INCENTIVE           121
 STOP                150
+RETRY                 0
+REMINDER              0
+WAIT                  0
 
-The headline
-
-Across 1,000 controlled synthetic cases, REVERA generated ₹60.43
-lakh in net recovered revenue --- a +7.09% uplift over baseline and
-₹1.35 lakh above a fixed-reminder strategy, with zero policy
-violations.
-
-Important: This is a controlled synthetic benchmark, not a
-production merchant performance claim.
-
-ML Risk Model
-
-REVERA uses a customer-group holdout strategy to reduce customer-level
-leakage between training and test data.
-
-Evaluation
-
-Metric               Score
-
-ROC-AUC         0.7829
-Precision           0.5566
-Recall              0.7047
-F1                  0.6220
-Accuracy            0.7129
-Brier Score         0.1901
-
-Train events      9,544
-Test events       2,456
-Test customers      586
-Split              Customer-group holdout
-
-The benchmark dataset is synthetic.
+Important: These benchmark numbers are from controlled synthetic
+data and are not production merchant performance claims.
 
 Razorpay Integration
 
-REVERA demonstrates an actual recovery execution loop using Razorpay
-Test Mode.
+REVERA integrates with Razorpay Test Mode for the recovery execution
+path.
 
-Decision
-   ↓
+Example flow:
+
+Recovery Decision
+      ↓
 Policy APPROVED
-   ↓
-PAYMENT_LINK
-   ↓
-Razorpay Test Payment Link
-   ↓
-Customer Payment
-   ↓
-Razorpay Webhook
-   ↓
-HMAC Verification
-   ↓
-Idempotency Check
-   ↓
-Recovery Action = PAID
-   ↓
-Case = RECOVERED
-   ↓
-Verified ₹ Revenue
+      ↓
+PAYMENT_LINK selected
+      ↓
+Razorpay Test Mode Payment Link
+      ↓
+Customer completes payment
+      ↓
+Razorpay webhook
+      ↓
+HMAC verification
+      ↓
+Idempotency check
+      ↓
+Recovery action updated
+      ↓
+Case marked recovered
+      ↓
+Audit event created
 
-The system also handles webhook-driven reconciliation and protects
-against duplicate event processing.
+A successful payment is therefore reflected as verified recovered
+revenue, rather than merely an attempted recovery.
 
-AI Integration
+Gemini Integration
 
-REVERA uses Gemini for structured reasoning in two major stages:
+Gemini is used for:
 
-Investigator
+Investigator reasoning
 
-Payment context
-Customer context
-Failure context
-        ↓
-Why is this revenue at risk?
+Recovery strategy generation
 
-Strategy
+Structured decision output
 
-Diagnosis
-Risk
-Economics context
-        ↓
-What should we do next?
+REVERA keeps the model behind a provider abstraction so the application
+can support multiple model providers.
 
-The application uses a provider abstraction so AI providers can be
-swapped without changing the recovery control plane.
+When live Gemini quota is unavailable, the application has a
+deterministic fallback for demo continuity.
 
-Demo resilience
+Fallback decisions are explicitly marked with:
 
-If live Gemini quota is unavailable, REVERA can fall back to
-deterministic reasoning for continuity.
+provider: revera-deterministic
+model: revera-fallback-v1
+live: false
 
-Fallback responses are explicitly identified as:
+This prevents the system from falsely representing a deterministic
+fallback as a live Gemini response.
 
-provider = revera-deterministic
-model    = revera-fallback-v1
-live     = false
-
-The system therefore does not present fallback output as live Gemini
-output.
-
-Dashboard
-
-The REVERA interface is designed as an operational revenue control
-center.
-
-It exposes:
-
-Revenue at risk
-
-Verified recovered revenue
-
-Recovery attempts
-
-Active recovery value
-
-Recovery rate
-
-Recovery cases
-
-AI decision traces
-
-Recovery pipeline
-
-Benchmark results
-
-Audit events
-
-System configuration
-
-The key question behind the UI is:
-
-Where is money slipping away, what should we do, and what did we
-actually recover?
-
-API
-
-Endpoint                        Purpose
-
-GET /api/cases                List recovery cases
-GET /api/cases/{case_id}      Inspect a case
-POST /api/risk/score          Generate recovery risk
-POST /api/recovery/decide     Run the decision pipeline
-POST /api/recovery/execute    Execute an approved recovery action
-GET /api/recovery/actions     View recovery actions
-GET /api/analytics            Recovery analytics
-GET /api/benchmark            Benchmark results
-GET /api/ai/status            AI provider status
-POST /api/webhooks/razorpay   Receive Razorpay events
-
-Interactive API documentation is available through FastAPI Swagger at:
-
-http://127.0.0.1:8000/docs
-
-Repository Structure
+Project Structure
 
 recoveros/
 │
@@ -570,6 +414,7 @@ recoveros/
 │   │   ├── recovery_pipeline.py
 │   │   ├── model_router.py
 │   │   └── ...
+│   │
 │   ├── requirements.txt
 │   └── ...
 │
@@ -578,15 +423,15 @@ recoveros/
 │   │   ├── App.jsx
 │   │   ├── style.css
 │   │   └── ...
+│   │
 │   ├── public/
 │   ├── package.json
 │   └── vite.config.js
 │
 ├── .gitignore
-├── README.md
-└── ...
+└── README.md
 
-Run Locally
+Local Setup
 
 Prerequisites
 
@@ -600,7 +445,12 @@ Razorpay Test Mode credentials
 
 Gemini API key
 
-Backend
+1. Clone the repository
+
+git clone <YOUR_GITHUB_REPOSITORY>
+cd recoveros
+
+2. Backend setup
 
 cd backend
 python -m venv .venv
@@ -617,7 +467,7 @@ Install dependencies:
 
 pip install -r requirements.txt
 
-Start:
+Start the API:
 
 uvicorn app.main:app --reload
 
@@ -625,47 +475,508 @@ Backend:
 
 http://127.0.0.1:8000
 
-Environment Variables
+Swagger API documentation:
 
-Create backend/.env:
+http://127.0.0.1:8000/docs
+
+Backend Environment Variables
+
+Create:
+
+backend/.env
+
+Example:
 
 GEMINI_API_KEY=your_gemini_api_key
 
-RAZORPAY_KEY_ID=rzp_test_xxxxxxxxx
-RAZORPAY_KEY_SECRET=your_test_secret
+RAZORPAY_KEY_ID=rzp_test_xxxxxxxxxxxxx
+RAZORPAY_KEY_SECRET=your_razorpay_test_secret
 RAZORPAY_WEBHOOK_SECRET=your_webhook_secret
 
-Never commit secrets.
+Never commit real secrets to GitHub.
 
-Frontend
+Frontend Setup
 
 Open another terminal:
 
 cd frontend
 npm install
 
-Create frontend/.env:
+Create:
+
+frontend/.env
+
+Example:
 
 VITE_API_BASE_URL=http://127.0.0.1:8000
 
-Start:
+Start the frontend:
 
 npm run dev
 
-Security
+The Vite development server will display the local frontend URL.
+
+Main API Endpoints
+
+Endpoint                            Purpose
+
+GET /api/cases                    List recovery cases
+
+GET /api/cases/{case_id}          Get a recovery case
+
+POST /api/risk/score              Calculate recovery risk
+
+POST /api/recovery/decide         Run the complete recovery decision
+pipeline
+
+POST /api/recovery/execute        Execute an approved recovery action
+
+GET /api/recovery/actions         View recovery actions
+
+GET /api/analytics                Revenue recovery analytics
+
+GET /api/benchmark                Controlled benchmark
+
+GET /api/ai/status                AI provider status
+
+POST /api/webhooks/razorpay       Razorpay webhook receiver
+
+Example Decision Pipeline
+
+A recovery case enters the system:
+
+Case:
+RCP-1042
+
+Amount:
+₹8,499
+
+Event:
+payment.failed
+
+Payment method:
+UPI
+
+Failure reason:
+transient_failure
+
+REVERA then performs:
+
+1. Risk scoring
+2. Customer/payment diagnosis
+3. Recovery strategy proposal
+4. Economic comparison
+5. Policy authorization
+6. Final action selection
+
+The final decision can look conceptually like:
+
+Action:
+PAYMENT_LINK
+
+Policy:
+APPROVED
+
+Execution:
+READY_FOR_EXECUTION
+
+Expected recovery:
+₹8,278.53
+
+The final recovered amount is not considered verified until Razorpay
+confirms the payment through the webhook.
+
+Safety Architecture
+
+REVERA follows a layered authorization model.
+
+                 ┌────────────────────┐
+                 │      Gemini        │
+                 │ Reason / Propose   │
+                 └─────────┬──────────┘
+                           ↓
+                 ┌────────────────────┐
+                 │ Economics Engine   │
+                 │ Optimize outcome   │
+                 └─────────┬──────────┘
+                           ↓
+                 ┌────────────────────┐
+                 │ Policy Guard       │
+                 │ Authorize / Block  │
+                 └─────────┬──────────┘
+                           ↓
+                 ┌────────────────────┐
+                 │ Razorpay Executor  │
+                 │ Execute action     │
+                 └─────────┬──────────┘
+                           ↓
+                 ┌────────────────────┐
+                 │ Webhook Verification│
+                 │ Prove recovery     │
+                 └────────────────────┘
+
+This separation prevents the LLM from becoming the financial authority.
+
+Stopping Rules
+
+Automation must know when not to act.
+
+REVERA stops recovery when:
+
+Maximum attempts are reached
+
+Customer contact limit is reached
+
+Policy blocks the requested action
+
+Transaction requires human review
+
+The recovery strategy determines that further intervention is not
+economically justified
+
+The objective is not maximum automation.
+
+The objective is:
+
+Maximum verified recovery within controlled risk.
+
+Auditability
+
+Every important transition can be traced through the recovery lifecycle.
+
+Case Created
+     ↓
+Risk Scored
+     ↓
+AI Diagnosed
+     ↓
+Strategy Proposed
+     ↓
+Economics Evaluated
+     ↓
+Policy Checked
+     ↓
+Action Executed
+     ↓
+Webhook Received
+     ↓
+Payment Verified
+     ↓
+Revenue Recovered
+
+This makes the system suitable for explaining not only what
+happened, but also why an action was selected.
+
+Testing Strategy
+
+REVERA should be tested across:
+
+Risk
+
+Low-risk case
+
+High-risk case
+
+Failed payment
+
+Checkout abandonment
+
+Repeated failures
+
+Economics
+
+PAYMENT_LINK
+
+ALTERNATIVE_METHOD
+
+RETRY
+
+REMINDER
+
+WAIT
+
+INCENTIVE
+
+STOP
+
+Policy
+
+Amount below automation limit
+
+Amount above automation limit
+
+Amount above human-review limit
+
+Maximum attempts
+
+Maximum contacts
+
+Excessive discount
+
+Razorpay
+
+Payment-link creation
+
+Successful payment
+
+Partial payment
+
+Cancellation
+
+Expiration
+
+Invalid webhook signature
+
+Duplicate webhook event
+
+Recovery Verification
+
+Attempted ≠ Recovered
+
+Created Payment Link ≠ Recovered
+
+Successful Razorpay Webhook = Verified Recovery
+
+Dashboard
+
+The REVERA dashboard provides visibility into:
+
+Revenue at risk
+
+Verified recovered revenue
+
+Recovery attempts
+
+Active recovery value
+
+Recovery rate
+
+Case status
+
+AI decisions
+
+Recovery pipeline
+
+Benchmark performance
+
+Audit events
+
+The interface is designed around the operational question:
+
+Where is revenue leaking, what should we do, and how much money did
+we actually recover?
+
+Deployment
+
+The recommended deployment architecture is:
+
+                Internet
+                   │
+          ┌────────┴────────┐
+          ↓                 ↓
+     React Frontend      Razorpay
+          │                 │
+          ↓                 ↓
+     FastAPI Backend ← Webhook
+          │
+     ┌────┴────┐
+     ↓         ↓
+  SQLite     Gemini
+
+For the Buildathon demo:
+
+Frontend can be deployed as a static site
+
+FastAPI can be deployed as a web service
+
+Razorpay Test Mode is used for the payment execution demo
+
+Environment variables store secrets
+
+SQLite is acceptable for the demonstration environment
+
+For production deployment, the database should be replaced with a
+durable managed database and additional operational controls should be
+introduced.
+
+Buildathon Demo Story
+
+The recommended 5-minute story is:
+
+0:00--0:25 --- Hook
+
+"Every failed payment is not just a failed transaction. It is revenue
+that may still be recoverable."
+
+0:25--1:10 --- Problem
+
+Show the revenue-at-risk dashboard and explain that generic retries or
+reminders treat every failure the same.
+
+1:10--2:00 --- AI Decision
+
+Open a recovery case and show:
+
+Risk
+→ Diagnosis
+→ Strategy
+→ Economics
+→ Policy
+→ Final Action
+
+2:00--3:00 --- Real Razorpay Flow
+
+Execute an approved payment-link recovery in Razorpay Test Mode.
+
+3:00--3:40 --- Governance
+
+Show:
+
+Policy decision
+
+Audit trail
+
+Attempt limits
+
+Contact limits
+
+Stopping rules
+
+3:40--4:20 --- Benchmark
+
+Show the 1,000-case controlled synthetic benchmark:
+
+₹60.43 lakh net recovered
++7.09% vs baseline
+₹1.35 lakh above fixed reminder
+0 policy violations
+
+4:20--5:00 --- Close
+
+"REVERA doesn't just identify revenue leakage. It closes the loop from
+detection to verified money recovered."
+
+Key Design Principles
+
+Detect
+
+Find revenue that is at risk.
+
+Diagnose
+
+Understand the customer and payment context.
+
+Decide
+
+Choose a recovery strategy.
+
+Optimize
+
+Select the strongest expected economic outcome.
+
+Act
+
+Execute only an authorized action.
+
+Prove
+
+Count revenue only after external confirmation.
+
+Learn
+
+Use outcomes to improve future decisions.
+
+Limitations
+
+REVERA is a Buildathon prototype and should not be interpreted as a
+production-ready financial automation platform.
+
+Current limitations include:
+
+Benchmark data is synthetic.
+
+Razorpay execution is demonstrated in Test Mode.
+
+SQLite is used for the prototype.
+
+Model quality depends on available training data.
+
+Live Gemini usage may be constrained by API quota.
+
+Production deployment would require stronger observability,
+authentication, durable storage, secret management, rate limiting,
+and operational review workflows.
+
+Future Roadmap
+
+V1 --- Buildathon Prototype
+
+Risk prediction
+
+AI diagnosis
+
+Strategy selection
+
+Economics optimizer
+
+Policy guard
+
+Razorpay execution
+
+Webhook verification
+
+Audit trail
+
+Benchmark lab
+
+V2 --- Production Recovery Platform
+
+Merchant-specific models
+
+Online learning from verified outcomes
+
+Durable event streaming
+
+Multi-tenant architecture
+
+Human approval workflows
+
+Advanced customer segmentation
+
+Experimentation / A-B testing
+
+Recovery policy configuration UI
+
+Production-grade observability
+
+V3 --- Autonomous Revenue Recovery
+
+Observe
+   ↓
+Predict
+   ↓
+Reason
+   ↓
+Optimize
+   ↓
+Act
+   ↓
+Verify
+   ↓
+Learn
+   ↺
+
+Security Notes
 
 Never commit:
 
 .env
-.env.*
-*.db
-*.sqlite
-*.sqlite3
 API keys
 Razorpay secrets
 Webhook secrets
+Database files containing sensitive data
 
-Recommended root .gitignore:
+Recommended .gitignore:
 
 .env
 .env.*
@@ -687,252 +998,42 @@ dist/
 
 .DS_Store
 
-Testing
+Tech Stack
 
-REVERA's critical paths should be tested at every layer.
+Frontend
 
-Risk
+React
 
-High-risk payment
+Vite
 
-Low-risk payment
+JavaScript
 
-Repeated failures
+CSS
 
-Checkout abandonment
+Backend
 
-Different payment methods
+Python
 
-Different failure reasons
+FastAPI
 
-Economics
+SQLite
 
-Payment link
+AI / ML
 
-Alternative method
+Gemini
 
-Retry
+Scikit-learn
 
-Reminder
+Structured model outputs
 
-Wait
+Provider abstraction
 
-Incentive
+Payments
 
-Stop
+Razorpay Test Mode
 
-Policy
-
-Amount within automation limit
-
-Amount above automation limit
-
-Amount above human-review limit
-
-Maximum attempts
-
-Maximum contacts
-
-Excessive discount
+Payment Links
 
 Webhooks
 
-Valid signature
-
-Invalid signature
-
-Duplicate event
-
-Payment success
-
-Partial payment
-
-Cancellation
-
-Expiration
-
-Recovery truth
-
-Attempted
-   ≠
-Recovered
-
-Created
-   ≠
-Recovered
-
-Paid + Verified Webhook
-   =
-Verified Recovery
-
-Tech Stack
-
-Area       Technology
-
-Frontend   React + Vite
-Backend    Python + FastAPI
-Database   SQLite
-ML         Scikit-learn
-AI         Gemini + provider abstraction
-Payments   Razorpay Test Mode
-Webhooks   HMAC SHA-256 verification
-Recovery   Deterministic economics + policy engine
-
-Roadmap
-
-V1 --- Buildathon
-
-Revenue risk scoring
-
-AI diagnosis
-
-AI strategy
-
-Recovery economics
-
-Policy guard
-
-Razorpay Test Mode execution
-
-Webhook verification
-
-Audit trail
-
-Controlled benchmark
-
-V2 --- Production Recovery Platform
-
-Merchant-specific models
-
-Durable event streaming
-
-Multi-tenant architecture
-
-Human approval workflows
-
-Online learning from verified outcomes
-
-A/B recovery experiments
-
-Advanced customer segmentation
-
-Production observability
-
-V3 --- Closed-Loop Revenue Intelligence
-
-OBSERVE
-   ↓
-PREDICT
-   ↓
-REASON
-   ↓
-OPTIMIZE
-   ↓
-ACT
-   ↓
-VERIFY
-   ↓
-LEARN
-   ↺
-
-What We Would Build Next
-
-The most valuable next step is not simply "more AI."
-
-It is better feedback.
-
-Every verified outcome can become a learning signal:
-
-Context
-  +
-Decision
-  +
-Action
-  +
-Policy
-  +
-Outcome
-  =
-Better Future Recovery
-
-That creates a compounding recovery system instead of a one-shot
-automation.
-
-Buildathon Demo
-
-A five-minute demonstration can follow this sequence:
-
-00:00 --- The hook
-
-"Every failed payment is a revenue opportunity until we prove it is
-lost."
-
-00:30 --- Show the problem
-
-Open the REVERA dashboard and show revenue at risk.
-
-01:10 --- Show intelligence
-
-Open a case and walk through:
-
-Risk
-→ Diagnosis
-→ Strategy
-→ Economics
-→ Policy
-→ Action
-
-02:00 --- Show real execution
-
-Execute an approved Razorpay Test Mode payment-link recovery.
-
-03:00 --- Show governance
-
-Open the audit trail and demonstrate that AI cannot bypass deterministic
-policy.
-
-03:40 --- Show proof
-
-Show the webhook-confirmed recovery.
-
-04:10 --- Show the benchmark
-
-₹60.43 lakh net recovered
-+7.09% vs baseline
-₹1.35 lakh above fixed reminder
-0 policy violations
-
-04:40 --- Close
-
-"REVERA doesn't just identify revenue leakage. It closes the loop
-from detection to verified money recovered."
-
-The One-Sentence Pitch
-
-REVERA is an AI revenue recovery control plane that predicts
-recoverability, reasons about the right intervention, optimizes for
-expected net recovery, enforces policy before execution, and verifies
-the actual money recovered through Razorpay.
-
-Project Status
-
-Buildathon-ready prototype
-
-ML Risk Engine          ✓
-AI Reasoning            ✓
-Recovery Economics      ✓
-Policy Guard            ✓
-Razorpay Execution      ✓
-Webhook Verification    ✓
-Audit Trail             ✓
-Benchmark               ✓
-Dashboard               ✓
-
-::: {align="center"}
-
-REVERA
-
-Recover More. Grow Smarter.
-
-Detect. Decide. Act. Prove.
-:::
+HMAC verification

@@ -137,7 +137,7 @@ pyasn1==0.6.4
 pyasn1_modules==0.4.2
 pybase64==1.4.3
 pycparser==3.0
-pydantic==2.11.7
+pydantic==2.12.5
 pydantic-settings==2.10.1
 pydantic_core==2.33.2
 Pygments==2.20.0

@@ -7,9 +7,82 @@ import {
     Bot, Gauge, PlayCircle, RefreshCw, Server, AlertTriangle, ExternalLink
 } from "lucide-react";
 
-const API_BASE = (import.meta.env.VITE_API_BASE_URL || "http://localhost:8000").replace(/\/$/, "");
-
 const logoData = "data:image/png;base64,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";
+
+function IntroPage({ onGetStarted }) {
+    const features = [
+        [Bot, "AI-Powered Diagnosis", "Understand why revenue is slipping away using payment and customer context."],
+        [Zap, "Smart Recovery Decisions", "Select the recovery action with the strongest expected economic outcome."],
+        [ShieldCheck, "Policy-Aware Automation", "Every recovery action passes deterministic safety and policy controls."],
+        [CheckCircle2, "Verified Revenue", "Confirm actual recovery through Razorpay payment webhook events."],
+        [FileText, "Complete Audit Trail", "Track every decision, action, policy check and recovery outcome."],
+        [Gauge, "Recovery Economics", "Measure incremental recovery and optimize intervention costs."]
+    ];
+
+    return (
+        <div className="intro-page">
+            <div className="intro-orb intro-orb-one" />
+            <div className="intro-orb intro-orb-two" />
+            <div className="intro-grid" />
+
+            <header className="intro-nav">
+                <div className="intro-brand">
+                    <div className="intro-logo">
+                        <img src={logoData} alt="REVERA" />
+                    </div>
+                    <div>
+                        <strong>REVERA</strong>
+                        <span>Intelligent Revenue Recovery</span>
+                    </div>
+                </div>
+                <div className="intro-status"><i /> RAZORPAY TEST MODE</div>
+            </header>
+
+            <main className="intro-main">
+                <section className="intro-hero">
+                    <div className="intro-badge"><span><Zap size={13} /></span> AI-POWERED REVENUE RECOVERY</div>
+                    <h1>Recover the revenue<br /><em>you are about to lose.</em></h1>
+                    <p>REVERA detects revenue leakage, diagnoses payment failures, chooses the best recovery strategy and verifies the money actually recovered.</p>
+                    <div className="intro-actions">
+                        <button className="intro-cta" onClick={onGetStarted}>Get Started <ArrowRight size={18} /></button>
+                        <div className="intro-trust"><ShieldCheck size={15} /> Policy-aware &amp; auditable</div>
+                    </div>
+                    <div className="intro-flow">
+                        {["Detect", "Decide", "Act", "Prove"].map((item, index) => (
+                            <React.Fragment key={item}>
+                                <div className="intro-flow-step"><small>0{index + 1}</small><b>{item}</b></div>
+                                {index < 3 && <ArrowRight size={14} />}
+                            </React.Fragment>
+                        ))}
+                    </div>
+                </section>
+
+                <section className="intro-features">
+                    <div className="intro-section-heading">
+                        <span>CORE CAPABILITIES</span>
+                        <h2>Everything needed to win revenue back.</h2>
+                        <p>One intelligent control plane from failed payment to verified recovery.</p>
+                    </div>
+                    <div className="intro-feature-grid">
+                        {features.map(([Icon, title, text]) => (
+                            <div className="intro-feature-card" key={title}>
+                                <div className="intro-feature-icon"><Icon size={20} /></div>
+                                <div><h3>{title}</h3><p>{text}</p></div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            </main>
+
+            <footer className="intro-footer">
+                <div><b>REVERA</b><span>Intelligent Revenue Recovery System</span></div>
+                <div><span>Detect. Decide. Act. Prove.</span></div>
+            </footer>
+        </div>
+    );
+}
+
+const API_BASE = (import.meta.env.VITE_API_BASE_URL || "http://localhost:8000").replace(/\/$/, "");
 
 const fallbackCases = [
     { id: "RCP-1042", amount: 8499, event_type: "payment.failed", payment_method: "upi", recovery_probability: .78, recommended_action: "PAYMENT_LINK", failure_reason: "transient_failure", successful_payments: 7, failed_payments: 1, attempt_count: 1 },
@@ -54,6 +127,7 @@ function Logo() {
 
 function App() {
     const [page, setPage] = useState("dashboard");
+    const [showIntro, setShowIntro] = useState(true);
     const [cases, setCases] = useState([]);
     const [selected, setSelected] = useState(null);
     const [decision, setDecision] = useState(null);
@@ -203,6 +277,13 @@ function App() {
     };
 
     const navProps = { page, navigate };
+
+    const handleGetStarted = () => {
+        setShowIntro(false);
+    };
+
+    if (showIntro) return <IntroPage onGetStarted={handleGetStarted} />;
+
     return (
         <div className="app">
             <Sidebar {...navProps} backendOnline={backendOnline} />
@@ -401,8 +482,8 @@ function Cases({ cases, selected, onSelect }) {
                             filtered.map((item) => (
                                 <button
                                     className={`case-select ${selected && getId(selected) === getId(item)
-                                            ? "selected"
-                                            : ""
+                                        ? "selected"
+                                        : ""
                                         }`}
                                     key={getId(item)}
                                     onClick={() => onSelect(item)}
@@ -510,7 +591,7 @@ function Insights({ decision, backendOnline }) {
     return <><Header page={{ eyebrow: "GEMINI INTELLIGENCE", title: "AI Insights", description: "Explainable intelligence behind every recovery decision.", icon: Lightbulb }} /><div className="page-content"><div className="insight-grid">{[[Bot, "AI Investigation", live ? "Live" : "Available", decision?.investigator?.root_cause || "Gemini grounds diagnosis in payment and customer context."], [Zap, "Decision Intelligence", decision?.strategy?.proposed_action ? actionName(decision.strategy.proposed_action) : "Policy-aware", "Gemini proposes; economics evaluates expected value before authorization."], [ShieldCheck, "Safety Layer", decision?.policy?.decision || "ENFORCED", "Deterministic policy controls bound automated recovery."], [Database, "Evidence Grounding", decision?.investigator?.evidence?.length ? `${decision.investigator.evidence.length} signals` : "Verified", "Decision traces preserve evidence behind interventions."]].map(([I, t, v, p]) => <div className="panel insight" key={t}><I size={25} /><span>{t}</span><b>{v}</b><p>{p}</p></div>)}</div><div className="panel flow-panel"><h3>REVERA Intelligence Flow</h3><p>Detect → Diagnose → Decide → Optimize → Authorize → Execute → Verify</p><div className="flow">{["Detect", "Diagnose", "Decide", "Optimize", "Authorize"].map((x, i) => <React.Fragment key={x}><div><small>0{i + 1}</small><b>{x}</b><span>{["Revenue at risk", "Gemini investigation", "Recovery strategy", "Expected value", "Policy guard"][i]}</span></div>{i < 4 && <ArrowRight />}</React.Fragment>)}</div><div className="integration-line"><Server size={15} /> Backend {backendOnline ? "connected" : "offline"} · Gemini {live ? "live" : "ready"}</div></div></div></>;
 }
 
-function AnalyticsPage({ data }) {
+function Analytics({ data }) {
     const recovered = Number(data?.verified_recovered ?? data?.recovered ?? 0);
     const risk = Number(data?.revenue_at_risk ?? 0);
     const rate = Number(data?.recovery_rate ?? 0);
